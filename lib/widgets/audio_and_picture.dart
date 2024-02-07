@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mylibrary/consts/colors.dart';
 import 'package:mylibrary/service/funcsions/audio.dart';
+import 'package:mylibrary/widgets/basic_text.dart';
 
 class AudioAndPicture extends StatelessWidget {
   final double width;
@@ -21,7 +22,7 @@ class AudioAndPicture extends StatelessWidget {
             flex: 1,
             child: GestureDetector(
               child: Container(
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.95),
                   image: const DecorationImage(
                     fit: BoxFit.cover,
@@ -38,11 +39,13 @@ class AudioAndPicture extends StatelessWidget {
             flex: 3,
             child: GestureDetector(
               child: Container(
+                alignment: Alignment.center,
                 color: ConstColor.primaryColor,
+                child: basicText("Select Audio file", width * 0.05, color: ConstColor.blue),
               ),
               onTap: () async {
 //==================================== Upload Storage ====================================
-                selectAndUploadAudioFile();
+                selectAudioFile();
 //==================================== Upload Realtime Database ====================================
               },
             ),

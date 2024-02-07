@@ -183,6 +183,7 @@ class AudioContainer extends StatelessWidget {
                 SizedBox(height: width! * 0.05),
 //================================== Audio(File) Select and Upload Button ==================================
                 AudioAndPicture(
+//flutter_spinkit || wave_linear_progress_indicator || percent_indicator
                   width: width!,
                 ),
                 SizedBox(height: width! * 0.05),
@@ -218,18 +219,20 @@ class AudioContainer extends StatelessWidget {
                               borderRadius: BorderRadius.circular(width! * 0),
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async{
+                            await uploadAudio();
                             uploadDataFirestoreDatabase({
                               "title: ": nameController.text,
                               "avtor: ": avtorController.text,
                               "speaker: ": speakerController.text,
                               "date: ": DateTime.now().toString(),
+                              // ignore: use_build_context_synchronously
                               "private: ": Provider.of<ProviderClass>(
                                 context,
                                 listen: false,
                               ).checkValue,
                               "duration: ": "00:00",
-                              "size: ": "${fileSize/(8 * 1024 * 1024)} MB",
+                              "size: ": "${(fileSize/(1024 * 1024)).round()} MB",
                               "audioFile: ": downloadUrl.toString(),
                             }).then((value) {
                               nameController.clear();

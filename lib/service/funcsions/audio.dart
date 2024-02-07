@@ -8,16 +8,44 @@ import 'package:mylibrary/screens/pages/add.dart';
 
 String downloadUrl = "";
 int fileSize = 0;
-Future<void> selectAndUploadAudioFile() async {
+FilePickerResult? result;
+File? selectedFile;
+Future<void> selectAudioFile() async {
 //==================================== Select Audio File ====================================
-  File? selectedFile;
-  
-  FilePickerResult? result = await FilePicker.platform
+
+  result = await FilePicker.platform
       .pickFiles(type: FileType.audio, allowMultiple: false);
+//   if (result != null) {
+//     selectedFile = File(result!.files.single.path!);
+//     fileSize = await selectedFile!.length();
+//     print("Tanlangan audio path manzili: ${selectedFile!.path}");
+
+// //==================================== Upload Audio File ====================================
+//     try {
+//       FirebaseStorage storage = FirebaseStorage.instance;
+//       Reference storageReference = storage.ref().child(
+//             "Audio Part/${nameController.text}.mp3",
+//           );
+
+//       UploadTask uploadTask = storageReference.putFile(selectedFile!);
+
+//       await uploadTask.whenComplete(() async{
+//         downloadUrl = await storageReference.getDownloadURL();
+//         print("Audio yuklandi");
+//       });
+//     } catch (e) {
+//       print("Xatolik mavjud: $e");
+//     }
+//   } else {
+//     print("Siz tanlagan fayl mavjud emas yoki buzilgan");
+//   }
+}
+
+Future<void> uploadAudio() async {
   if (result != null) {
-    selectedFile = File(result.files.single.path!);
-    fileSize = await selectedFile.length();
-    print("Tanlangan audio path manzili: ${selectedFile.path}");
+    selectedFile = File(result!.files.single.path!);
+    fileSize = await selectedFile!.length();
+    print("Tanlangan audio path manzili: ${selectedFile!.path}");
 
 //==================================== Upload Audio File ====================================
     try {
@@ -25,12 +53,11 @@ Future<void> selectAndUploadAudioFile() async {
       Reference storageReference = storage.ref().child(
             "Audio Part/${nameController.text}.mp3",
           );
-      if (true) {
-        downloadUrl = await storageReference.getDownloadURL();
-      }
-      UploadTask uploadTask = storageReference.putFile(selectedFile);
 
-      await uploadTask.whenComplete(() {
+      UploadTask uploadTask = storageReference.putFile(selectedFile!);
+
+      await uploadTask.whenComplete(() async {
+        downloadUrl = await storageReference.getDownloadURL();
         print("Audio yuklandi");
       });
     } catch (e) {
@@ -42,13 +69,12 @@ Future<void> selectAndUploadAudioFile() async {
 }
 
 Future<void> uploadDataFirestoreDatabase(Map<String, dynamic> data) async {
-    try {
-      CollectionReference reference =
-          FirebaseFirestore.instance.collection("Audio");
-      await reference.add(data);
-      print("Data added successfully");
-    } catch (e) {
-      print("Error adding data: $e");
-    }
-  
+  try {
+    CollectionReference reference =
+        FirebaseFirestore.instance.collection("Audio");
+    await reference.add(data);
+    print("Data added successfully");
+  } catch (e) {
+    print("Error adding data: $e");
+  }
 }
